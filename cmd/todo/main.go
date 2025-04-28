@@ -16,7 +16,7 @@ func main() {
 
 	r := router.NewRouter()
 
-	log.Println("Service is running on port", cfg.Port)
+	log.Println("Service is running on port:", cfg.Port)
 	if err := http.ListenAndServe(":"+cfg.Port, r); err != nil {
 		log.Fatal(err)
 	}

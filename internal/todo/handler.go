@@ -23,7 +23,7 @@ func RegisterRoutes(r *mux.Router) {
 }
 
 func CreateHandler(w http.ResponseWriter, r *http.Request) {
-	userID := r.Context().Value("user_id").(int)
+	userID := r.Context().Value(middleware.UserKey).(int)
 
 	var req TodoRequest
 	json.NewDecoder(r.Body).Decode(&req)
@@ -38,7 +38,7 @@ func CreateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ListHandler(w http.ResponseWriter, r *http.Request) {
-	userID := r.Context().Value("user_id").(int)
+	userID := r.Context().Value(middleware.UserKey).(int)
 
 	todos, err := List(userID)
 	if err != nil {

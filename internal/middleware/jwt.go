@@ -10,9 +10,9 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-type ContextKey string
+type contextKey string
 
-var UserKey string = "UserID"
+const UserKey contextKey = "userID"
 
 func JWTMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -24,11 +24,10 @@ func JWTMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		tokenString := strings.TrimPrefix(authHeader, "Bearer")
+		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 			return []byte(cfg.JWTSecret), nil
 		})
-
 		if err != nil || !token.Valid {
 			http.Error(w, "Invalid token", http.StatusUnauthorized)
 			return
@@ -40,9 +39,13 @@ func JWTMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		UserID := int(claims["user_id"].(float64))
+		UserID, ok := claims["user_id"].(float64)
+		if !ok {
+			http.Error(w, "Invalid user_id in token", http.StatusUnauthorized)
+			return
+		}
 
-		ctx := context.WithValue(r.Context(), UserKey, UserID)
+		ctx := context.WithValue(r.Context(), UserKey, int(UserID))
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

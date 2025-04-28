@@ -3,6 +3,7 @@ package auth
 import (
 	"errors"
 	"github.com/golang-jwt/jwt/v5"
+	"time"
 
 	"github.com/bekhuli/go-todo/config"
 
@@ -30,9 +31,10 @@ func Login(username, password string) (string, error) {
 	}
 
 	cfg := config.Envs
+	expiration := time.Second * time.Duration(cfg.JWTExpirationInSeconds)
 	claims := jwt.MapClaims{
 		"user_id": user.ID,
-		"exp":     cfg.JWTExpirationInSeconds,
+		"exp":     time.Now().Add(expiration).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

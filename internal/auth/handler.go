@@ -24,6 +24,11 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if creds.Username == "" || creds.Password == "" {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
 	err := Register(creds.Username, creds.Password)
 	if err != nil {
 		http.Error(w, "Error registering user", http.StatusInternalServerError)
