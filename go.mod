@@ -1,3 +1,12 @@
 module github.com/bekhuli/go-todo
 
 go 1.24.1
+
+require (
+	github.com/golang-jwt/jwt/v5 v5.2.2
+	github.com/gorilla/mux v1.8.1
+	github.com/lib/pq v1.10.9
+	github.com/lpernett/godotenv v0.0.0-20230527005122-0de1d4c5ef5e
+)
+
+require golang.org/x/crypto v0.37.0
