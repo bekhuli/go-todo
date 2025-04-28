@@ -24,7 +24,7 @@ func initConfig() Config {
 
 	return Config{
 		Port:                   getEnv("PORT", "8080"),
-		DatabaseURL:            getEnv("DATABASE_URL", "postgres://user:password@localhost:5432/todolist?sslmode=disable"),
+		DatabaseURL:            getEnv("DATABASE_URL", "postgres://root:1234@localhost:5432/todo?sslmode=disable"),
 		JWTSecret:              getEnv("JWT_SECRET", "your_secret_key"),
 		JWTExpirationInSeconds: getEnvAsInt("JWT_EXP", 3600*24*7),
 	}
