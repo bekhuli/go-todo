@@ -1,7 +1,9 @@
 package auth
 
 import (
+	"database/sql"
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -26,6 +28,14 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 	if creds.Username == "" || creds.Password == "" {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	if _, err := GetUserByUsername(creds.Username); !errors.Is(err, sql.ErrNoRows) {
+		http.Error(w, "User with this username already exists", http.StatusForbidden)
+		return
+	} else if err != nil {
+		http.Error(w, "Error registering user", http.StatusInternalServerError)
 		return
 	}
 
